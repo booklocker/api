@@ -14,15 +14,15 @@ import (
 var db *sql.DB
 
 type Book struct {
-	Id uint `json:"id"`
-	Name string `json:"name"`
-	Author string `json:"author"`
-	ChapterCount string `json:"chapter_count"`
+	Id           uint   `json:"id"`
+	Name         string `json:"name"`
+	Author       string `json:"author"`
+	ChapterCount uint   `json:"chapter_count"`
 }
 
 type Chapter struct {
-	Number uint `json:"number"`
-	Name string `json:"name"`
+	Number   uint   `json:"number"`
+	Name     string `json:"name"`
 	Contents string `json:"contents,omitempty"`
 }
 
@@ -57,7 +57,6 @@ func getBooks(w http.ResponseWriter, _ *http.Request) {
 		fmt.Println("Failed to encode chapter list: " + err.Error())
 	}
 }
-
 
 func getChapters(w http.ResponseWriter, r *http.Request) {
 	bookId, err := strconv.Atoi(r.URL.Query().Get("book"))
@@ -97,9 +96,6 @@ func getChapters(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-
-
-
 func getChapter(w http.ResponseWriter, r *http.Request) {
 	bookId, err := strconv.Atoi(r.URL.Query().Get("book"))
 	if err != nil {
@@ -124,8 +120,10 @@ func getChapter(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Fprintf(w, "<h1>" + chapter.Name + "</h1>\n")
-	fmt.Fprintf(w, chapter.Contents)
+	fmt.Fprintf(
+		w, `{"number": %s, "name": "%s", "contents": %s}`,
+		strconv.FormatUint(uint64(chapter.Number), 10), chapter.Name, chapter.Contents,
+	)
 }
 
 func homePage(w http.ResponseWriter, _ *http.Request) {
